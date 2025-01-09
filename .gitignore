@@ -169,6 +169,10 @@ cython_debug/
 
 # PyPI configuration file
 .pypirc
-/References
+
+# Finder
 .DS_Store
+
+# Folders
+/References
 /Instructions
