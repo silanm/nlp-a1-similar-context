@@ -176,3 +176,6 @@ cython_debug/
 # Folders
 /References
 /Instructions
+glove.6B.100d.txt
+*.model
+*.pth
