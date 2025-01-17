@@ -1,13 +1,19 @@
+Credits: The Reuters dataset is provided by the NLTK library.
+
 # Model Comparison
 
-| Model               | Window Size | Training Loss     |  Training Time  | Syntactic Accurary | Semantic Accuracy | Spearman Correlation |
-| ------------------- | :---------: | :---------------: | :-------------: | :----------------: | :---------------: | :------------------: |
+Against word-test.v1.txt
+
+| Model               | Window Size | Training Loss       |  Training Time  | Syntactic Accurary | Semantic Accuracy | Spearman Correlation |
+| ------------------- | :---------: | :-----------------: | :-------------: | :----------------: | :---------------: | :------------------: |
 | Skipgram            |      2      | 15994   `->` 5779   |  1.4 sec/epoch  |     0.0000         |     0.0000        |       -0.4524        |
 | Skipgram (Negative) |      2      | 1099020 `->` 160336 |  2.0 sec/epoch  |     0.0000         |     0.0000        |       -0.1667        |
 | GloVe               |      2      | 1727    `->` 479    |  0.6 sec/epoch  |     0.0000         |     0.0000        |       -0.0714        |
-| GloVe (Gensim)      |      -      | -                 |  -              |     0.9387         |     0.5545        |        0.6019        |
+| GloVe (Gensim)      |      -      | -                   |  -              |     0.9387         |     0.5545        |        0.6019        |
 
 # Similarity Evaluation
+
+Against wordsim_similarity_goldstandard.txt
 
 | Model | Skipgram | Skipgram (Negative) | GloVe   | GloVe (Gensim) |
 | ----- | :------: | :-----------------: | :-----: | :------------: |
