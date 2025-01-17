@@ -1,14 +1,12 @@
 import gradio as gr
 import numpy as np
 import torch
-
-from ChakyGloVe import GloVe
-from ChakySkipgram import Skipgram
-from ChakySkipgramNeg import SkipgramNegSampling
-
 from nltk.corpus import reuters
 
 import aux
+from Archived.ChakyGloVe import GloVe
+from Archived.ChakySkipgram import Skipgram
+from Archived.ChakySkipgramNeg import SkipgramNegSampling
 
 PATH_MODEL_W2V_SKIPGRAM = "skipgram.model"
 PATH_MODEL_W2V_NEGATIVE = "skipgram_neg_sampling.model"
@@ -29,16 +27,9 @@ vocab, vocab_size = aux.build_vocab(corpus)
 word2index = aux.build_word2index(vocab)
 index2word = aux.build_index2word(word2index)
 
-loaded_model_w2v_skipgram = torch.load(
-    PATH_MODEL_W2V_SKIPGRAM, weights_only=False, map_location=device
-)
-
-loaded_model_w2v_negative = torch.load(
-    PATH_MODEL_W2V_NEGATIVE, weights_only=False, map_location=device
-)
-
+loaded_model_w2v_skipgram = torch.load(PATH_MODEL_W2V_SKIPGRAM, weights_only=False, map_location=device)
+loaded_model_w2v_negative = torch.load(PATH_MODEL_W2V_NEGATIVE, weights_only=False, map_location=device)
 loaded_model_glv = torch.load(PATH_MODEL_GLV, weights_only=False, map_location=device)
-
 loaded_model_glv_gensim = torch.load(PATH_MODEL_GLV_GENSIM, weights_only=False, map_location=device)
 
 
@@ -134,11 +125,7 @@ with gr.Blocks() as demo:
 
         def update_word2_choices(word1):
             with open(PATH_WORDSIM, "r", encoding="utf-8") as f:
-                word2_choices = [
-                    w2
-                    for w1_, w2, _ in [line.strip().split() for line in f]
-                    if w1_ == word1 and w2 in word2index
-                ]
+                word2_choices = [w2 for w1_, w2, _ in [line.strip().split() for line in f] if w1_ == word1 and w2 in word2index]
                 return gr.update(choices=word2_choices)
 
         word1_input.change(fn=update_word2_choices, inputs=word1_input, outputs=word2_input)
@@ -178,22 +165,14 @@ with gr.Blocks() as demo:
                                 pair = (words[0], words[1])
                                 if pair not in syntactic_choices:
                                     syntactic_choices.append(pair)
-                ac_word1_input = gr.Dropdown(
-                    choices=semantic_choices, label="Word 1", interactive=True
-                )
+                ac_word1_input = gr.Dropdown(choices=semantic_choices, label="Word 1", interactive=True)
 
             with gr.Column():
                 ac_word2_input = gr.Dropdown(choices=[], label="Word 2", interactive=False)
 
                 def update_ac_word2_choices(ac_word1):
                     with open("word-test.v1.txt", "r", encoding="utf-8") as f:
-                        ac_word2_choices = list(
-                            set(
-                                words[1]
-                                for line in f
-                                if (words := line.strip().split()) and words[0] == ac_word1
-                            )
-                        )
+                        ac_word2_choices = list(set(words[1] for line in f if (words := line.strip().split()) and words[0] == ac_word1))
                         return gr.update(choices=ac_word2_choices)
 
                 ac_word1_input.change(
@@ -207,13 +186,7 @@ with gr.Blocks() as demo:
                 def update_ac_word3_choices(ac_word1, ac_word2):
                     with open("word-test.v1.txt", "r", encoding="utf-8") as f:
                         ac_word3_choices = list(
-                            set(
-                                words[2]
-                                for line in f
-                                if (words := line.strip().split())
-                                and words[0] == ac_word1
-                                and words[1] == ac_word2
-                            )
+                            set(words[2] for line in f if (words := line.strip().split()) and words[0] == ac_word1 and words[1] == ac_word2)
                         )
                         return gr.update(choices=ac_word3_choices)
 

@@ -1,8 +1,6 @@
-import numpy as np
 import nltk
+import numpy as np
 import torch
-from collections import Counter
-
 
 nltk.download("reuters")
 nltk.download("punkt")
@@ -19,9 +17,7 @@ def build_corpus():
 
     for id in reuters.fileids()[:SAMPLE_SIZE]:
         sentences = reuters.words(id)
-        sentences = [
-            sentence.lower() for sentence in sentences if sentence.isalpha()
-        ]
+        sentences = [sentence.lower() for sentence in sentences if sentence.isalpha()]
         corpus.append(sentences)
 
     return corpus
@@ -42,16 +38,10 @@ def build_index2word(word2index):
 
 
 def get_embedding(model, word_index):
-    return (
-        model.embedding_v(
-            torch.tensor([word_index], dtype=torch.long).to('cpu')
-        ).detach().cpu().numpy()
-    )
+    return model.embedding_v(torch.tensor([word_index], dtype=torch.long).to("cpu")).detach().cpu().numpy()
 
 
 def compare_similarity(model, word1, word2, similarity_file, word2index):
-    """Compare similarity score of two words with human score."""
-        
     # Get embeddings for both words
     word1_vec = get_embedding(model, word2index[word1]).squeeze()
     word2_vec = get_embedding(model, word2index[word2]).squeeze()
@@ -78,7 +68,6 @@ def compare_similarity(model, word1, word2, similarity_file, word2index):
 
 
 def compare_similarity_gensim(model, word1, word2, similarity_file, word2index):
-    
     model_score = model.similarity(word1, word2)
     human_score = None
     with open(similarity_file, "r", encoding="utf-8") as f:
@@ -87,10 +76,10 @@ def compare_similarity_gensim(model, word1, word2, similarity_file, word2index):
             if (w1 == word1 and w2 == word2) or (w1 == word2 and w2 == word1):
                 human_score = float(score)
                 break
-            
+
     if human_score is None:
         return f"No human score found for words: {word1}, {word2}"
-    
+
     spearman_corr, _ = spearmanr([model_score], [human_score])
-    
+
     return model_score, human_score, spearman_corr
