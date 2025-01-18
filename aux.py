@@ -3,16 +3,13 @@ import numpy as np
 import torch
 import torch.nn as nn
 
-nltk.download("reuters")
-nltk.download("punkt")
+nltk.download("reuters", quiet=True)
+nltk.download("punkt", quiet=True)
 
 from collections import Counter
 
 from nltk.corpus import reuters
 from scipy.stats import spearmanr
-
-# SAMPLE_SIZE = 1000
-SAMPLE_SIZE = len(reuters.fileids())
 
 
 def build_corpus(sample_size):
@@ -46,26 +43,19 @@ def get_embedding(model, word_index):
 
 
 def compare_similarity(model, word1, word2, similarity_file, word2index):
-    # Get embeddings for both words
     word1_vec = get_embedding(model, word2index[word1]).squeeze()
     word2_vec = get_embedding(model, word2index[word2]).squeeze()
-
-    # Calculate the similarity score using dot product
     model_score = np.dot(word1_vec, word2_vec)
-
-    # Read the human score from the similarity file
     human_score = None
+
     with open(similarity_file, "r", encoding="utf-8") as f:
         for line in f:
             w1, w2, score = line.strip().split()
             if (w1 == word1 and w2 == word2) or (w1 == word2 and w2 == word1):
                 human_score = float(score)
                 break
-
     if human_score is None:
         return f"No human score found for words: {word1}, {word2}"
-
-    # Calculate Spearman correlation
     spearman_corr, _ = spearmanr([model_score], [human_score])
     print(spearman_corr)
     return model_score, human_score, spearman_corr
@@ -80,16 +70,12 @@ def compare_similarity_gensim(model, word1, word2, similarity_file, word2index):
             if (w1 == word1 and w2 == word2) or (w1 == word2 and w2 == word1):
                 human_score = float(score)
                 break
-
     if human_score is None:
         return f"No human score found for words: {word1}, {word2}"
-
     spearman_corr, _ = spearmanr([model_score], [human_score])
-
     return model_score, human_score, spearman_corr
 
 
-# Skipgram Model
 class Skipgram(nn.Module):
     def __init__(self, vocab_size, embed_size):
         super(Skipgram, self).__init__()
@@ -97,19 +83,13 @@ class Skipgram(nn.Module):
         self.embedding_u = nn.Embedding(vocab_size, embed_size)
 
     def forward(self, center_words, context_words):
-        # Get the embeddings for the center and context words
         center_embed = self.embedding_v(center_words)
         context_embed = self.embedding_u(context_words)
-
-        # Compute the scores by taking the dot product of center and context embeddings
         scores = torch.matmul(center_embed, context_embed.T)
-
-        # Apply log softmax to the scores to get the log probabilities
         log_probs = torch.log_softmax(scores, dim=1)
         return log_probs
 
 
-# Skipgram Model with Negative Sampling
 class SkipgramNegSampling(nn.Module):
     def __init__(self, vocab_size, embed_size):
         super(SkipgramNegSampling, self).__init__()
@@ -118,23 +98,15 @@ class SkipgramNegSampling(nn.Module):
         self.logsigmoid = nn.LogSigmoid()
 
     def forward(self, center_words, pos_context, neg_context):
-        # Get the embeddings for the center, positive context, and negative context words
         center_embed = self.embedding_v(center_words)
         pos_embed = self.embedding_u(pos_context)
         neg_embed = self.embedding_u(neg_context)
-
-        # Compute the positive score by taking the dot product of center and positive context embeddings
         pos_score = self.logsigmoid(torch.bmm(pos_embed.unsqueeze(1), center_embed.unsqueeze(2))).squeeze()
-
-        # Compute the negative score by taking the dot product of center and negative context embeddings
         neg_score = self.logsigmoid(-torch.bmm(neg_embed, center_embed.unsqueeze(2))).squeeze()
-
-        # Calculate the loss as the negative sum of positive and negative scores
         loss = -(pos_score.sum() + neg_score.sum())
         return loss
 
 
-# GloVe Model
 class GloVe(nn.Module):
     def __init__(self, vocab_size, embed_size):
         super(GloVe, self).__init__()
@@ -144,18 +116,11 @@ class GloVe(nn.Module):
         self.u_bias = nn.Embedding(vocab_size, 1)
 
     def forward(self, center_words, target_words, co_occurrences, weightings):
-        # Get the embeddings for the center and target words
         center_embed = self.embedding_v(center_words)
         target_embed = self.embedding_u(target_words)
-
-        # Get the biases for the center and target words
         center_bias = self.v_bias(center_words).squeeze(1)
         target_bias = self.u_bias(target_words).squeeze(1)
-
-        # Compute the inner product of the center and target embeddings
         inner_product = (center_embed * target_embed).sum(dim=1)
-
-        # Calculate the loss using the weighting function and co-occurrences
         loss = weightings * torch.pow(inner_product + center_bias + target_bias - co_occurrences, 2)
         return loss.mean()
 

@@ -9,8 +9,6 @@ import aux
 import streamlit as st
 
 from nltk.corpus import reuters
-import requests
-from io import BytesIO
 
 PATH_MODEL_W2V_SKIPGRAM = "models/skipgram_model.pth"
 PATH_MODEL_W2V_NEGATIVE = "models/skipgram_neg_model.pth"
@@ -18,9 +16,8 @@ PATH_MODEL_GLV = "models/glove_model.pth"
 # PATH_MODEL_GENSIM = "models/glove_100d.kv"
 PATH_WORDSIM = "data/wordsim_similarity_goldstandard.txt"
 PATH_WORDTEST = "data/word-test.v1.txt"
-SAMPLE_SIZE = 100  # Number of documents to sample from the Reuters corpus
-SAMPLE_SIZE = len(reuters.fileids())  # Number of documents to sample from the Reuters corpus
-EMBEDDING_DIMENSION = 100  # Dimension of the embedding vectors
+SAMPLE_SIZE = len(reuters.fileids())
+EMBEDDING_DIMENSION = 100
 
 device = "cpu"
 corpus = aux.build_corpus(SAMPLE_SIZE)
@@ -47,11 +44,8 @@ model_skipgram, word2index_skipgram, vocab_skipgram = load_model(PATH_MODEL_W2V_
 model_skipgram_neg, word2index_neg, vocab_neg = load_model(PATH_MODEL_W2V_NEGATIVE, aux.SkipgramNegSampling, len(vocab), EMBEDDING_DIMENSION)
 model_glove, word2index_glove, vocab_glove = load_model(PATH_MODEL_GLV, aux.GloVe, len(vocab), EMBEDDING_DIMENSION)
 
-
 # def load_gensim_glove_fast(filepath):
 #     return KeyedVectors.load(filepath, mmap="r")
-
-
 # gensim_glove_model = load_gensim_glove_fast(filepath=PATH_MODEL_GENSIM)
 
 print("Models loaded.")
@@ -76,11 +70,10 @@ def find_top_similar_words(model, word2index, index2word, input_word, top_n=10, 
     return results
 
 
-# Streamlit UI
-# st.title("Similar Words Finder")
+# Streamlit
 st.title("Giggle")
 
-# Input section
+# Input
 col1, col2 = st.columns([0.87, 0.13], vertical_alignment="bottom")
 
 if "user_input" not in st.session_state:
@@ -97,7 +90,7 @@ with col1:
         value=st.session_state.user_input,
     )
 
-# Results section
+# Results
 if user_input:
     st.subheader(f"Similar words to '{st.session_state.user_input}'")
     col1, col2, col3, col4 = st.columns(4)
