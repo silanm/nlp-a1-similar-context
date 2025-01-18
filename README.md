@@ -1,4 +1,8 @@
-Credits: The Reuters dataset is provided by the NLTK library.
+# Giggle
+Streamlit URL: https://st125127-nlp-a1-similar-context.streamlit.app
+![](images/giggle-in-action.gif)
+
+Credits: Reuters dataset is provided by the NLTK library.
 
 # Model Comparison
 
