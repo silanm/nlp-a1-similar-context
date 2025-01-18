@@ -5,9 +5,13 @@ Streamlit URL: https://st125127-nlp-a1-similar-context.streamlit.app
 
 ![](images/giggle-in-action.gif)
 
-Credits: Reuters dataset is provided by the NLTK library.
-
 Models are trained on a sample of the Reuters corpus, 100-dimensional embeddings, batch size of 128, and 5 epochs.
+
+Similarity Scores on Giggle:
+- Skipgram and GloVe models may capture co-occurrence patterns but not semantic meaning
+- Though the models give high similarity scores but the `ouput similar words` are still not semantically related to the `input word`.
+- GloVe Gensim provided the most meaningful results in this case e.g., `thin` --> `thick`, `flat`, `thinner`
+
 
 # Model Comparison
 
