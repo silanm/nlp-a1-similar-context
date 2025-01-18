@@ -178,6 +178,8 @@ cython_debug/
 /dev
 /references
 /instructions
+/recordings
+
 data/glove.6B.100d.txt
 data/glove.6B.100d.word2vec.txt
 models/glove_100d.kv.vectors.npy
