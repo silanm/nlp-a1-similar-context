@@ -174,12 +174,8 @@ cython_debug/
 .DS_Store
 
 # Folders
-/Archived
-/Dev
-/References
-/Instructions
-
-# Models
-glove.6B.100d.txt
-*.model
-*.pth
+/archived
+/dev
+/references
+/instructions
+data/glove.6B.100d.txt

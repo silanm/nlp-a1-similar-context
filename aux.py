@@ -6,6 +6,8 @@ import torch.nn as nn
 nltk.download("reuters")
 nltk.download("punkt")
 
+from collections import Counter
+
 from nltk.corpus import reuters
 from scipy.stats import spearmanr
 
