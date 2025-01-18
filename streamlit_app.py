@@ -15,7 +15,7 @@ from io import BytesIO
 PATH_MODEL_W2V_SKIPGRAM = "models/skipgram_model.pth"
 PATH_MODEL_W2V_NEGATIVE = "models/skipgram_neg_model.pth"
 PATH_MODEL_GLV = "models/glove_model.pth"
-PATH_MODEL_GENSIM = "models/glove_100d.kv"
+# PATH_MODEL_GENSIM = "models/glove_100d.kv"
 PATH_WORDSIM = "data/wordsim_similarity_goldstandard.txt"
 PATH_WORDTEST = "data/word-test.v1.txt"
 SAMPLE_SIZE = 100  # Number of documents to sample from the Reuters corpus
@@ -48,11 +48,11 @@ model_skipgram_neg, word2index_neg, vocab_neg = load_model(PATH_MODEL_W2V_NEGATI
 model_glove, word2index_glove, vocab_glove = load_model(PATH_MODEL_GLV, aux.GloVe, len(vocab), EMBEDDING_DIMENSION)
 
 
-def load_gensim_glove_fast(filepath):
-    return KeyedVectors.load(filepath, mmap="r")
+# def load_gensim_glove_fast(filepath):
+#     return KeyedVectors.load(filepath, mmap="r")
 
 
-gensim_glove_model = load_gensim_glove_fast(filepath=PATH_MODEL_GENSIM)
+# gensim_glove_model = load_gensim_glove_fast(filepath=PATH_MODEL_GENSIM)
 
 print("Models loaded.")
 
@@ -117,7 +117,7 @@ if user_input:
         glove_results = find_top_similar_words(model_glove, word2index_glove, vocab_glove, user_input)
         st.write("  \n".join(glove_results))
 
-    with col4:
-        st.write("**GloVe Gensim**")
-        gensim_results = find_top_similar_words(gensim_glove_model, gensim_glove_model.key_to_index, None, user_input, is_gensim=True)
-        st.write("  \n".join(gensim_results))
+    # with col4:
+    #     st.write("**GloVe Gensim**")
+    #     gensim_results = find_top_similar_words(gensim_glove_model, gensim_glove_model.key_to_index, None, user_input, is_gensim=True)
+    #     st.write("  \n".join(gensim_results))
