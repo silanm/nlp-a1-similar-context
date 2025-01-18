@@ -1,8 +1,13 @@
 # Giggle
 Streamlit URL: https://st125127-nlp-a1-similar-context.streamlit.app
+
+*Remarks: GloVe Gensim is removed from the online Streamlit app due to its large model size.*
+
 ![](images/giggle-in-action.gif)
 
 Credits: Reuters dataset is provided by the NLTK library.
+
+Models are trained on a sample of the Reuters corpus, 100-dimensional embeddings, batch size of 128, and 5 epochs.
 
 # Model Comparison
 
