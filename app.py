@@ -4,39 +4,40 @@ import torch
 from nltk.corpus import reuters
 
 import aux
-from Archived.ChakyGloVe import GloVe
-from Archived.ChakySkipgram import Skipgram
-from Archived.ChakySkipgramNeg import SkipgramNegSampling
 
-PATH_MODEL_W2V_SKIPGRAM = "skipgram.model"
-PATH_MODEL_W2V_NEGATIVE = "skipgram_neg_sampling.model"
-PATH_MODEL_GLV = "glove.model"
-PATH_MODEL_GLV_GENSIM = "glove_gensim.model"
+PATH_MODEL_W2V_SKIPGRAM = "skipgram_model.pth"
+PATH_MODEL_W2V_NEGATIVE = "skipgram_neg_model.pth"
+PATH_MODEL_GLV = "glove_model.pth"
+PATH_GLOVE_100D = "glove.6B.100d.txt"
 PATH_WORDSIM = "wordsim_similarity_goldstandard.txt"
 PATH_WORDTEST = "word-test.v1.txt"
 
-# device = torch.device(
-#     "mps"
-#     if torch.backends.mps.is_available()
-#     else ("cuda" if torch.cuda.is_available() else "cpu")
-# )
+SAMPLE_SIZE = 100  # Number of documents to sample from the Reuters corpus
+EMBEDDING_DIMENSION = 100  # Dimension of the embedding vectors
+
 device = "cpu"
 
-corpus = aux.build_corpus()
-vocab, vocab_size = aux.build_vocab(corpus)
-word2index = aux.build_word2index(vocab)
-index2word = aux.build_index2word(word2index)
+corpus = aux.build_corpus(SAMPLE_SIZE)
 
-loaded_model_w2v_skipgram = torch.load(PATH_MODEL_W2V_SKIPGRAM, weights_only=False, map_location=device)
-loaded_model_w2v_negative = torch.load(PATH_MODEL_W2V_NEGATIVE, weights_only=False, map_location=device)
-loaded_model_glv = torch.load(PATH_MODEL_GLV, weights_only=False, map_location=device)
-loaded_model_glv_gensim = torch.load(PATH_MODEL_GLV_GENSIM, weights_only=False, map_location=device)
+vocab, word2index, word_counts = aux.build_vocab(corpus)
+
+
+loaded_model_w2v_skipgram, word2index_skipgram, vocab_skipgram = aux.load_model(
+    PATH_MODEL_W2V_SKIPGRAM, aux.Skipgram, len(vocab), EMBEDDING_DIMENSION
+)
+loaded_model_w2v_negative, word2index_neg, vocab_neg = aux.load_model(
+    PATH_MODEL_W2V_NEGATIVE, aux.SkipgramNegSampling, len(vocab), EMBEDDING_DIMENSION
+)
+loaded_model_glv, word2index_glove, vocab_glove = aux.load_model(PATH_MODEL_GLV, aux.GloVe, len(vocab), EMBEDDING_DIMENSION)
+
+from gensim.models import KeyedVectors
+
+loaded_model_glv_gensim = KeyedVectors.load_word2vec_format(PATH_GLOVE_100D, binary=False, no_header=True)
 
 
 loaded_model_w2v_skipgram.eval()
 loaded_model_w2v_negative.eval()
-# loaded_model_glv.eval()
-
+loaded_model_glv.eval()
 print("All models loaded")
 
 
