@@ -11,7 +11,8 @@ Models are trained on a sample of the Reuters corpus, 100-dimensional embeddings
 
 # Model Comparison
 
-Against word-test.v1.txt
+- Modeling results in modeling--results--allsamples_win2_em100_ep50_b256_lr0.pdf
+- Accuracy against word-test.v1.txt
 
 | Model               | Window Size | Training Loss       |  Training Time  | Syntactic Accurary | Semantic Accuracy | Spearman Correlation |
 | ------------------- | :---------: | :-----------------: | :-------------: | :----------------: | :---------------: | :------------------: |
@@ -22,7 +23,7 @@ Against word-test.v1.txt
 
 # Similarity Evaluation
 
-Against wordsim_similarity_goldstandard.txt
+- Similarity against wordsim_similarity_goldstandard.txt
 
 | Model | Skipgram | Skipgram (Negative) | GloVe   | GloVe (Gensim) |
 | ----- | :------: | :-----------------: | :-----: | :------------: |
