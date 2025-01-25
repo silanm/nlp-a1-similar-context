@@ -9,7 +9,7 @@ Models are trained on a sample of the Reuters corpus, 100-dimensional embeddings
 
 Similarity Scores on Giggle:
 - Skipgram and GloVe models may capture co-occurrence patterns but not semantic meaning
-- Though the models give high similarity scores but the `ouput similar words` are still not semantically related to the `input word`.
+- Though the models give high similarity scores but the ouput similar words are still not semantically related to the input word.
 - GloVe Gensim provided the most meaningful results in this case e.g., `thin` --> `thick`, `flat`, `thinner`
 
 
