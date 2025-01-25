@@ -45,7 +45,7 @@ Finding top 10 most similar words to "dollar" across four models.
 | GloVe (Gensim) | `currency`, `greenback`, `euro`, `dollars`, `currencies`, `yen`, `peso`, `weaker`, `price`, `trading` | 0.6 - 0.7 |
 
 ### Observations
-- **Skipgram**: These words are loosely connected to financial contexts but aren't directly related to `dollar`.
+- **Skipgram**: These words are loosely connected to financial contexts and aren't directly related to `dollar`.
 - **Negative Sampling**: These words are more financially and economically oriented.
 - **GloVe**: GloVe captures co-occurrence patterns across the corpus but seems to mix relevant financial terms (`bill`, `trust`) with unrelated ones (`coffee`).
 - **Gensim**: Highly relevant words—all directly related to currency and finance.
